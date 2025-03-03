@@ -15,16 +15,8 @@ DB_CONFIG = {
 }
 
 
-def get_db_connection():
+async def get_db_connection():
     """Crée et retourne une connexion à la base de données."""
-    connection = pymysql.connect(**DB_CONFIG)
+    connection = await pymysql.connect(**DB_CONFIG)
     return connection
 
-connection = get_db_connection()
-try:
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT VERSION()")
-        version = cursor.fetchone()
-        print(f"MySQL Version: {version}")
-finally:
-    connection.close()

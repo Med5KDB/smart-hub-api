@@ -2,7 +2,7 @@ from app.database import get_db_connection
 from app.schemas import ClientCreate
 
 
-def create_client(client: ClientCreate):
+async def create_client(client: ClientCreate):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -16,7 +16,7 @@ def create_client(client: ClientCreate):
     finally:
         connection.close()
 
-def get_client(id: int):
+async def get_client(id: int):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -30,7 +30,7 @@ def get_client(id: int):
     finally:
         connection.close()
 
-def update_client(id: int, client: ClientCreate):
+async def update_client(id: int, client: ClientCreate):
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -44,8 +44,8 @@ def update_client(id: int, client: ClientCreate):
     finally:
         connection.close()
 
-def delete_client(id: int):
-    connection = get_db_connection()
+async def delete_client(id: int):
+    connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM client WHERE id = %s", (id,))
