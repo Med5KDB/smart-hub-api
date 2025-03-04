@@ -2,7 +2,7 @@ from app.database import get_db_connection
 from app.schemas import EmployeeCreate
 
 
-async def create_employee(employee: EmployeeCreate):
+async def create(employee: EmployeeCreate):
     connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -16,7 +16,7 @@ async def create_employee(employee: EmployeeCreate):
     finally:
         connection.close()
 
-async def get_employee(id: int):
+async def findOne(id: int):
     connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -30,7 +30,7 @@ async def get_employee(id: int):
     finally:
         connection.close()
 
-async def update_employee(id: int, employee: EmployeeCreate):
+async def updateOne(id: int, employee: EmployeeCreate):
     connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
@@ -44,7 +44,7 @@ async def update_employee(id: int, employee: EmployeeCreate):
     finally:
         connection.close()
 
-async def delete_employee(id: int):
+async def deleteOne(id: int):
     connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:

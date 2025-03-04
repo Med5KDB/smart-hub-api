@@ -1,16 +1,15 @@
-from typing import Union
-
 from fastapi import FastAPI
+from app.routers import client_router, employee_router
+import uvicorn
 
 app = FastAPI()
 
+app.include_router(client_router)
+app.include_router(employee_router)
 
 @app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+def read_root():
+    return {"message": "Welcome to SmartHub API!"}
 
-print("Hello World from FastAPI")
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080, reload=True)

@@ -1,24 +1,24 @@
 from fastapi import APIRouter, HTTPException
-from app.crud.employee import create_employee, delete_employee, get_employee, update_employee
+from app.crud.__init__ import createEmployee, deleteEmployee, findEmployee, updateEmployee
 from app.schemas import Employee, EmployeeCreate
 
-router = APIRouter()
+employee_router = APIRouter()
 
-@router.post("/employee", response_model=Employee)
+@employee_router.post("/employee", response_model=Employee)
 async def create_employee(employee: EmployeeCreate):
-    return await create_employee(employee)
+    return await createEmployee(employee)
 
-@router.get("/employee/{id}", response_model=list[Employee])
+@employee_router.get("/employee/{id}", response_model=list[Employee])
 async def employee(id: int):
-    employee = await get_employee(id)
+    employee = await findEmployee(id)
     if employee is None:
         raise HTTPException(status_code=404, detail="Employee not found")
     return employee
 
-@router.put("/employee/{id}", response_model=Employee)
+@employee_router.put("/employee/{id}", response_model=Employee)
 async def update_employee(id: int, employee: EmployeeCreate):
-    return await update_employee(id, employee)
+    return await updateEmployee(id, employee)
 
-@router.delete("/employee/{id}", response_model=Employee)
+@employee_router.delete("/employee/{id}", response_model=Employee)
 async def delete_employee(id: int):
-    return await delete_employee(id)
+    return await deleteEmployee(id)

@@ -2,8 +2,8 @@ from app.database import get_db_connection
 from app.schemas import ClientCreate
 
 
-async def create_client(client: ClientCreate):
-    connection = get_db_connection()
+async def create(client: ClientCreate):
+    connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO client (first_name, last_name, email, phone, address) VALUES (%s, %s, %s, %s, %s)", (client.first_name, client.last_name, client.email, client.phone, client.address))
@@ -16,8 +16,8 @@ async def create_client(client: ClientCreate):
     finally:
         connection.close()
 
-async def get_client(id: int):
-    connection = get_db_connection()
+async def findOne(id: int):
+    connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM client WHERE id = %s", (id,))
@@ -30,8 +30,8 @@ async def get_client(id: int):
     finally:
         connection.close()
 
-async def update_client(id: int, client: ClientCreate):
-    connection = get_db_connection()
+async def updateOne(id: int, client: ClientCreate):
+    connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("UPDATE client SET first_name = %s, last_name = %s, email = %s, phone = %s, address = %s WHERE id = %s", (client.first_name, client.last_name, client.email, client.phone, client.address, id))
@@ -44,7 +44,7 @@ async def update_client(id: int, client: ClientCreate):
     finally:
         connection.close()
 
-async def delete_client(id: int):
+async def deleteOne(id: int):
     connection = await get_db_connection()
     try:
         with connection.cursor() as cursor:
