@@ -15,8 +15,8 @@ DB_CONFIG = {
 }
 
 
-async def get_db_connection():
+def get_db_connection():
     """Crée et retourne une connexion à la base de données."""
-    connection = await pymysql.connect(**DB_CONFIG)
+    connection = pymysql.connect(**DB_CONFIG)
     return connection
 

@@ -2,22 +2,19 @@ from app.database import get_db_connection
 from app.schemas import ClientCreate
 
 
-async def create(client: ClientCreate):
-    connection = await get_db_connection()
+def create(client: ClientCreate):
+    connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO client (first_name, last_name, email, phone, address) VALUES (%s, %s, %s, %s, %s)", (client.first_name, client.last_name, client.email, client.phone, client.address))
             connection.commit()
-            print("Insertion réussie !")
-        return True
+            return cursor.lastrowid
     except Exception as e:
         print(f"Erreur lors de l'insertion : {e}")
-        return False
-    finally:
-        connection.close()
+        raise e
 
-async def findOne(id: int):
-    connection = await get_db_connection()
+def findOne(id: int):
+    connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM client WHERE id = %s", (id,))
@@ -26,26 +23,33 @@ async def findOne(id: int):
         return result
     except Exception as e:
         print(f"Erreur lors de la récupération : {e}")
-        return None
-    finally:
-        connection.close()
+        raise e
 
-async def updateOne(id: int, client: ClientCreate):
-    connection = await get_db_connection()
+def findAll(): 
+    try: 
+        with get_db_connection as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT * FROM client")
+                clients = cursor.fetchall()
+            return clients
+    except Exception as e:
+        raise e
+
+def updateOne(id: int, client: ClientCreate):
+    
     try:
-        with connection.cursor() as cursor:
-            cursor.execute("UPDATE client SET first_name = %s, last_name = %s, email = %s, phone = %s, address = %s WHERE id = %s", (client.first_name, client.last_name, client.email, client.phone, client.address, id))
-            connection.commit()
-            print("Mise à jour réussie !")
-        return True
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("UPDATE client SET first_name = %s, last_name = %s, email = %s, phone = %s, address = %s WHERE id = %s", (client.first_name, client.last_name, client.email, client.phone, client.address, id))
+                conn.commit()
+                print("Mise à jour réussie !")
+            return True
     except Exception as e:
         print(f"Erreur lors de la mise à jour : {e}")
         return False
-    finally:
-        connection.close()
 
-async def deleteOne(id: int):
-    connection = await get_db_connection()
+def deleteOne(id: int):
+    connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM client WHERE id = %s", (id,))
@@ -55,6 +59,4 @@ async def deleteOne(id: int):
     except Exception as e:
         print(f"Erreur lors de la suppression : {e}")
         return False
-    finally:   
-        connection.close()
         
